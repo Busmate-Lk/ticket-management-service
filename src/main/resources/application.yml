@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    # Change from direct connection to transaction pooler
+    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
+    username: postgres.jexvdkdlncxygdisjwqo
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  profiles:
+    active: production  # Enable production profile for Swagger UI testing
+
+server:
+  port: 8083
+
+supabase:
+  api:
+    key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2eGJ6Y3hqdWVnaHZydHNmZHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkyODAzMjksImV4cCI6MjA2NDg1NjMyOX0.b8JmC_Q-O6K5k_5gpIiQWIDKE5jqyQxb9FgrfJzngkg
+  auth:
+    url: https://gvxbzcxjueghvrtsfdxc.supabase.co/auth/v1
+  jwt:
+    secret: v7dyiu735nxybSzPS41oWmOtOLwZyaJOApdGaFqWpTNGYkmL7yWP6fnKPG2FWSxr5AB5kSdFiRiT78YcB7vT5w==
+
+logging:
+  level:
+    com.busmate.routeschedule: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
