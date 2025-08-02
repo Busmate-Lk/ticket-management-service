@@ -1,0 +1,28 @@
+package com.busmate.ticketing_service.controller;
+import com.busmate.ticketing_service.dto.RouteFareDTO;
+import com.busmate.ticketing_service.service.RouteFareService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/routeFare")
+@CrossOrigin
+public class RouteFareController {
+
+    @Autowired
+    private RouteFareService routeFareService;
+
+
+    @PostMapping(path = "/save-route-fare")
+    public ResponseEntity<String> saveRouteFare(@RequestBody RouteFareDTO routeFareDTO) {
+
+      boolean saved=  routeFareService.saveRouteFare(routeFareDTO);
+        if(saved){
+            return ResponseEntity.ok("Route fare saved successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Route fare already exists for this section");
+        }
+    }
+
+}
