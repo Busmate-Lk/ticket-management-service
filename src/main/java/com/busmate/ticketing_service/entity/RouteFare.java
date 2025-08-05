@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@Table(name = "route_fare")
+@Table(name = "route_fare_section")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
