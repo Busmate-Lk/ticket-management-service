@@ -15,7 +15,7 @@ public class RouteFareController {
     private RouteFareService routeFareService;
 
 
-    @PostMapping(path = "/save-route-fare")
+    @PostMapping(path = "/save-route-fare-section")
     public ResponseEntity<String> saveRouteFare(@RequestBody RouteFareDTO routeFareDTO) {
 
       boolean saved=  routeFareService.saveRouteFare(routeFareDTO);
