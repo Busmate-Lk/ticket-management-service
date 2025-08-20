@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - main  # Change if you deploy from another branch
 
 jobs:
   deploy:
@@ -33,8 +33,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "target/*.jar"
-          target: "/home/${{ secrets.EC2_USER }}/${{ github.event.repository.name }}/"
-      # 5. Deploy Docker container on EC2
+          target: "/home/${{ secrets.EC2_USER }}/${{ github.event.repository.name }}/app.jar"
+
+      # 5. Deploy Docker container
       - name: Deploy Docker container
         uses: appleboy/ssh-action@master
         with:
@@ -46,16 +47,31 @@ jobs:
             mkdir -p ${{ github.event.repository.name }}
             cd ${{ github.event.repository.name }}
 
+            # Install Docker if missing
+            if ! command -v docker &> /dev/null
+            then
+              echo "Docker not found, installing..."
+              sudo apt update -y
+              sudo apt install -y docker.io
+              sudo systemctl start docker
+              sudo systemctl enable docker
+              sudo usermod -aG docker $USER
+            fi
+
             # Create Dockerfile
             cat <<EOF > Dockerfile
             FROM openjdk:17-jdk
             WORKDIR /app
-            COPY *.jar app.jar
+            COPY app.jar app.jar
             ENTRYPOINT ["java", "-jar", "app.jar"]
-            EXPOSE 8080
+            EXPOSE 8083
             EOF
 
-            # Build and run container
+            # Build Docker image
             docker build -t ${{ github.event.repository.name }} .
+
+            # Remove existing container if running
             docker rm -f ${{ github.event.repository.name }} || true
-            docker run -d --name ${{ github.event.repository.name }} -p 8080:8080 ${{ github.event.repository.name }}
+
+            # Run new container on port 8083
+            docker run -d --name ${{ github.event.repository.name }} -p 8083:8083 ${{ github.event.repository.name }}
