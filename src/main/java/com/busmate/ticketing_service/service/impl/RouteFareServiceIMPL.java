@@ -84,7 +84,7 @@ public class RouteFareServiceIMPL implements RouteFareService {
             return exactMatch.get().getSectionId();
         }
 
-        // Find latest lower distance (33, 32 if looking for 34)
+        //  first find latest lower distance (33, 32 if looking for 34)
         Optional<RouteFare> lowerDistance = routeFareRepo.findLatestLowerDistance(routeId, distance);
         if (lowerDistance.isPresent()) {
             return lowerDistance.get().getSectionId();
