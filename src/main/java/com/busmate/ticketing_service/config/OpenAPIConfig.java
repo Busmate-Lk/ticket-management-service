@@ -21,7 +21,7 @@ public class OpenAPIConfig {
                         .version("1.0.0")
                         .description("API for managing ticket issuance, validation, QR code generation, and scan history tracking " +
                                 "within the BusmateLK platform. Use the Authorize button to enter a JWT token obtained from Supabase login."))
-//                .addServersItem(new Server().url("http://47.128.250.151:8080").description("AWS EC2 Production"))
+                .addServersItem(new Server().url("http://54.91.217.117:8083").description("AWS EC2 Production"))
                 .addServersItem(new Server().url("http://localhost:8083").description("Local Development"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new io.swagger.v3.oas.models.Components()
