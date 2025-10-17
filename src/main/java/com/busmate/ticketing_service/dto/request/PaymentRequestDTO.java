@@ -10,12 +10,15 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConductorLogRequestDTO {
+public class PaymentRequestDTO {
     private Long conductorId;
     private Long busId;
     private Long tripId;
-    private Integer numberOfPassengers;
     private String startLocationId;
     private String endLocationId;
     private BigDecimal fareAmount;
+    private String paymentMethod;
+    private String transactionRef;
+
+
 }
