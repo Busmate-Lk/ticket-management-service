@@ -24,6 +24,7 @@ public class RouteFare {
     @Column(name = "section_id", nullable = false)
     private int sectionId;
 
+
     @Column(name = "section_name", nullable = false)
     private String sectionName;
 
