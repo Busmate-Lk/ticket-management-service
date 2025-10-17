@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tickets")
-@CrossOrigin
 public class TicketController {
 
     @Autowired
@@ -26,6 +25,9 @@ public class TicketController {
         return conductorLogService.getConductorLogDetails(conductorId);
     }
 
-
+    @GetMapping("/bus/{busId}")
+    public List<ConductorLogTicketDTO> getTicketsByBusId(@PathVariable Long busId) {
+        return conductorLogService.getTicketDetailsByBusId(busId);
+    }
 
 }
