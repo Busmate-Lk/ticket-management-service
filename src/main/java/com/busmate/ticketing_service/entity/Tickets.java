@@ -52,4 +52,7 @@ public class Tickets {
 
     @Column(name = "issued_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime issuedAt;
+
+    @ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Transactions transactions;
 }
