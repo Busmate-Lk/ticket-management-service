@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "payments")
-public class Payments {
+@Table(name = "online")
+public class Online {
 
     public enum Method { PAYHERE, CASH, CARD }
     public enum Status { PENDING, SUCCESS, FAILED, REFUNDED }
@@ -42,9 +42,9 @@ public class Payments {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToOne
-    @JoinColumn(name = "ticket_id", nullable = false)
-    private Tickets ticket;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")
+    private Transactions transactions;
 
     // Getters and setters omitted for brevity
 }
