@@ -107,6 +107,93 @@ public class PaymentServiceIMPL implements PaymentService {
 
     @Override
     public List<ConductorLogTicketDTO> getConductorLogDetails(Long conductorId) {
-        return List.of();
+        try {
+            // Fetch all tickets for the given conductor
+            List<Tickets> tickets = ticketRepo.findByConductorId(conductorId);
+
+            // Convert tickets to DTOs
+            return tickets.stream().map(ticket -> {
+                ConductorLogTicketDTO dto = new ConductorLogTicketDTO();
+                dto.setTicketId(ticket.getTicketId());
+                dto.setPassengerId(ticket.getPassengerId());
+
+                // Convert String location IDs to Long (handle potential parsing errors)
+                try {
+                    dto.setStartLocationId(
+                            ticket.getStartLocationId() != null ? Long.parseLong(ticket.getStartLocationId()) : null);
+                    dto.setEndLocationId(
+                            ticket.getEndLocationId() != null ? Long.parseLong(ticket.getEndLocationId()) : null);
+                } catch (NumberFormatException e) {
+                    dto.setStartLocationId(null);
+                    dto.setEndLocationId(null);
+                }
+
+                dto.setSeatNumber(ticket.getSeatNumber());
+                dto.setFareAmount(ticket.getFareAmount().doubleValue());
+                dto.setIssuedAt(ticket.getIssuedAt());
+
+                // Get payment status from transaction
+                if (ticket.getTransactions() != null) {
+                    dto.setPaymentStatus(ticket.getTransactions().getStatus().toString());
+                } else {
+                    dto.setPaymentStatus("UNKNOWN");
+                }
+
+                // Set passenger count to 1 (assuming 1 passenger per ticket)
+                dto.setPassengerCount(1);
+
+                return dto;
+            }).toList();
+
+        } catch (Exception e) {
+            // Return empty list in case of error
+            return List.of();
+        }
+    }
+
+    @Override
+    public List<ConductorLogTicketDTO> getTicketDetailsByBusId(Long busId) {
+        try {
+            // Fetch all tickets for the given bus ID
+            List<Tickets> tickets = ticketRepo.findByBusId(busId);
+
+            // Convert tickets to DTOs
+            return tickets.stream().map(ticket -> {
+                ConductorLogTicketDTO dto = new ConductorLogTicketDTO();
+                dto.setTicketId(ticket.getTicketId());
+                dto.setPassengerId(ticket.getPassengerId());
+
+                // Convert String location IDs to Long (handle potential parsing errors)
+                try {
+                    dto.setStartLocationId(
+                            ticket.getStartLocationId() != null ? Long.parseLong(ticket.getStartLocationId()) : null);
+                    dto.setEndLocationId(
+                            ticket.getEndLocationId() != null ? Long.parseLong(ticket.getEndLocationId()) : null);
+                } catch (NumberFormatException e) {
+                    dto.setStartLocationId(null);
+                    dto.setEndLocationId(null);
+                }
+
+                dto.setSeatNumber(ticket.getSeatNumber());
+                dto.setFareAmount(ticket.getFareAmount().doubleValue());
+                dto.setIssuedAt(ticket.getIssuedAt());
+
+                // Get payment status from transaction
+                if (ticket.getTransactions() != null) {
+                    dto.setPaymentStatus(ticket.getTransactions().getStatus().toString());
+                } else {
+                    dto.setPaymentStatus("UNKNOWN");
+                }
+
+                // Set passenger count to 1 (assuming 1 passenger per ticket)
+                dto.setPassengerCount(1);
+
+                return dto;
+            }).toList();
+
+        } catch (Exception e) {
+            // Return empty list in case of error
+            return List.of();
+        }
     }
 }

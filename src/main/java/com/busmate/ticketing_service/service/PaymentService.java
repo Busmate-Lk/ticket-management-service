@@ -9,4 +9,6 @@ public interface PaymentService {
     String issueTicket(PaymentRequestDTO requestDTO);
 
     List<ConductorLogTicketDTO> getConductorLogDetails(Long conductorId);
+
+    List<ConductorLogTicketDTO> getTicketDetailsByBusId(Long busId);
 }
