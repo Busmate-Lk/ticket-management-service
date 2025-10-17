@@ -42,7 +42,7 @@ public class Payments {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "ticket_id", nullable = false)
     private Tickets ticket;
 
