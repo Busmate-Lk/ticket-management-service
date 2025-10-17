@@ -21,8 +21,8 @@ public class Tickets {
     @Column(name = "bus_id", nullable = false)
     private Long busId;
 
-    @Column(name = "route_id", nullable = false)
-    private Long routeId;
+    @Column(name = "trip_id", nullable = false)
+    private Long tripId;
 
     @Column(name = "conductor_id")
     private Long conductorId;
@@ -33,8 +33,14 @@ public class Tickets {
     @Column(name = "seat_number", length = 10)
     private String seatNumber;
 
+    @Column(name = "number_of_passengers", nullable = false)
+    private Integer numberOfPassengers;
+
+    private String EndLocationId;
+    private String StartLocationId;
+
     @Column(name = "fare_amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal fareAmount;
+    private Double fareAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "issue_method", nullable = false)

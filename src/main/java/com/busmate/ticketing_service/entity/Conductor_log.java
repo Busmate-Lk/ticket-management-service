@@ -20,9 +20,6 @@ public class Conductor_log {
     @Column(name = "conductor_id", nullable = false)
     private Long conductorId;
 
-    @Column(name = "ticket_id", nullable = false)
-    private Long ticketId;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = false)
     private Action action;
@@ -30,8 +27,8 @@ public class Conductor_log {
     @Column(name = "logged_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime loggedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id", nullable = false)
-    private Payments payment;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Tickets ticket;
 
 }

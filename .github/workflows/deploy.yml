@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "target/*.jar"
-          target: "/home/${{ secrets.EC2_USER }}/${{ github.event.repository.name }}/app.jar"
+          target: "/home/ubuntu/${{ github.event.repository.name }}/"
 
       # 5. Deploy Docker container
       - name: Deploy Docker container
