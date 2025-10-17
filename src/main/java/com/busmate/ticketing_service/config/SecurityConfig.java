@@ -16,7 +16,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class SecurityConfig {
 
 //    private final OncePerRequestFilter jwtAuthenticationFilter;
-//    private final CorsConfigurationSource corsConfigurationSource;
+    private final CorsConfigurationSource corsConfigurationSource;
+
+    public SecurityConfig(CorsConfigurationSource corsConfigurationSource) {
+        this.corsConfigurationSource = corsConfigurationSource;
+    }
 
 //    public SecurityConfig(@Qualifier("jwtAuthenticationFilter") OncePerRequestFilter jwtAuthenticationFilter,
 //                          CorsConfigurationSource corsConfigurationSource) {
@@ -27,7 +31,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
