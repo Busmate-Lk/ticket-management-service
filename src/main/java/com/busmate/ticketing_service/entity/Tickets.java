@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "tickets")
 public class Tickets {
     public enum IssueMethod { CONDUCTOR, ONLINE }
-    public enum Status { ISSUED, CANCELLED, USED }
+    public enum Status { VALID, NOT_VALID }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +33,6 @@ public class Tickets {
     @Column(name = "seat_number", length = 10)
     private String seatNumber;
 
-    @Column(name = "number_of_passengers", nullable = false)
-    private Integer numberOfPassengers;
-
     private String EndLocationId;
     private String StartLocationId;
 
@@ -48,7 +45,7 @@ public class Tickets {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.ISSUED;
+    private Status status;
 
     @Column(name = "issued_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime issuedAt;
