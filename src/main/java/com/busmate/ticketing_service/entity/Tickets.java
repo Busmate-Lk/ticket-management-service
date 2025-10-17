@@ -40,7 +40,7 @@ public class Tickets {
     private String StartLocationId;
 
     @Column(name = "fare_amount", nullable = false, precision = 10, scale = 2)
-    private Double fareAmount;
+    private BigDecimal fareAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "issue_method", nullable = false)
