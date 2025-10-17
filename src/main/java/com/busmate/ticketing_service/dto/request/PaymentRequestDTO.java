@@ -20,5 +20,4 @@ public class PaymentRequestDTO {
     private String paymentMethod;
     private String transactionRef;
 
-
 }
