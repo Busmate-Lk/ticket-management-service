@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class ConductorLogTicketDTO {
     private Long ticketId;
     private String passengerId;
-    private Long startLocationId;
-    private Long endLocationId;
+    private String startLocationId;
+    private String endLocationId;
     private String seatNumber;
     private int passengerCount;
     private double fareAmount;
