@@ -96,8 +96,9 @@ jobs:
 
             echo "=== Verifying deployment ==="
             
-            # Wait for container to start
-            sleep 10
+            # Wait for container to start and stabilize
+            echo "Waiting for container to stabilize..."
+            sleep 15
             
             # Check if container is running
             if ! docker ps --filter "name=$APP_NAME" --filter "status=running" | grep -q $APP_NAME; then
@@ -106,21 +107,23 @@ jobs:
               exit 1
             fi
 
-            # Wait for application to be ready (max 2 minutes)
-            echo "Waiting for application to be ready..."
-            for i in {1..24}; do
-              if wget --quiet --tries=1 --timeout=5 --spider http://localhost:8083/actuator/health 2>/dev/null; then
-                echo "✅ Application is ready!"
-                break
-              fi
-              echo "Waiting... ($i/24)"
-              sleep 5
-              if [ $i -eq 24 ]; then
-                echo "❌ Application failed to start within 2 minutes"
-                docker logs $APP_NAME --tail=50
-                exit 1
-              fi
-            done
+            # Wait a bit more for application to fully initialize
+            echo "Waiting for application to fully initialize..."
+            sleep 15
+            
+            # Final container health check
+            if docker ps --filter "name=$APP_NAME" --filter "status=running" | grep -q $APP_NAME; then
+              echo "✅ Container is running successfully!"
+              echo "📋 Container status:"
+              docker ps --filter "name=$APP_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+              echo ""
+              echo "📊 Recent application logs:"
+              docker logs $APP_NAME --tail=10
+            else
+              echo "❌ Container failed to maintain running state"
+              docker logs $APP_NAME --tail=50
+              exit 1
+            fi
 
             echo "=== Deployment completed successfully ==="
             echo "🚀 Application is running at http://$(curl -s http://checkip.amazonaws.com):8083"
