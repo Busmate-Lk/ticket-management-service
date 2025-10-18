@@ -117,16 +117,9 @@ public class PaymentServiceIMPL implements PaymentService {
                 dto.setTicketId(ticket.getTicketId());
                 dto.setPassengerId(ticket.getPassengerId());
 
-                // Convert String location IDs to Long (handle potential parsing errors)
-                try {
-                    dto.setStartLocationId(
-                            ticket.getStartLocationId() != null ? Long.parseLong(ticket.getStartLocationId()) : null);
-                    dto.setEndLocationId(
-                            ticket.getEndLocationId() != null ? Long.parseLong(ticket.getEndLocationId()) : null);
-                } catch (NumberFormatException e) {
-                    dto.setStartLocationId(null);
-                    dto.setEndLocationId(null);
-                }
+                // Direct assignment of String location IDs
+                dto.setStartLocationId(ticket.getStartLocationId());
+                dto.setEndLocationId(ticket.getEndLocationId());
 
                 dto.setSeatNumber(ticket.getSeatNumber());
                 dto.setFareAmount(ticket.getFareAmount().doubleValue());
@@ -163,16 +156,9 @@ public class PaymentServiceIMPL implements PaymentService {
                 dto.setTicketId(ticket.getTicketId());
                 dto.setPassengerId(ticket.getPassengerId());
 
-                // Convert String location IDs to Long (handle potential parsing errors)
-                try {
-                    dto.setStartLocationId(
-                            ticket.getStartLocationId() != null ? Long.parseLong(ticket.getStartLocationId()) : null);
-                    dto.setEndLocationId(
-                            ticket.getEndLocationId() != null ? Long.parseLong(ticket.getEndLocationId()) : null);
-                } catch (NumberFormatException e) {
-                    dto.setStartLocationId(null);
-                    dto.setEndLocationId(null);
-                }
+                // Direct assignment of String location IDs
+                dto.setStartLocationId(ticket.getStartLocationId());
+                dto.setEndLocationId(ticket.getEndLocationId());
 
                 dto.setSeatNumber(ticket.getSeatNumber());
                 dto.setFareAmount(ticket.getFareAmount().doubleValue());
