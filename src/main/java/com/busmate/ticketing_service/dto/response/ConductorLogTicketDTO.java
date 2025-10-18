@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ConductorLogTicketDTO {
     private Long ticketId;
-    private Long passengerId;
+    private String passengerId;
     private Long startLocationId;
     private Long endLocationId;
     private String seatNumber;

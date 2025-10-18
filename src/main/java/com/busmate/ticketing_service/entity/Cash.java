@@ -18,7 +18,7 @@ public class Cash {
     private Long paymentId;
 
     @Column(name = "conductor_id", nullable = false)
-    private Long conductorId;
+    private String conductorId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = false)

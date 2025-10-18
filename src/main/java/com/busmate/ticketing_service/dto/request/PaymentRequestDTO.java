@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentRequestDTO {
-    private Long conductorId;
-    private Long busId;
-    private Long tripId;
+    private String conductorId;
+    private String busId;
+    private String tripId;
     private String startLocationId;
     private String endLocationId;
     private BigDecimal fareAmount;

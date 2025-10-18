@@ -6,6 +6,8 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.apache.kafka.common.protocol.types.Field.Str;
+
 @Entity
 @Data
 @Table(name = "online")
@@ -20,7 +22,7 @@ public class Online {
     private Long paymentId;
 
     @Column(name = "passenger_id")
-    private Long passengerId;
+    private String passengerId;
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
