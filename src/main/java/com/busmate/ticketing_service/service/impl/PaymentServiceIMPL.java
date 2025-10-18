@@ -106,7 +106,7 @@ public class PaymentServiceIMPL implements PaymentService {
     }
 
     @Override
-    public List<ConductorLogTicketDTO> getConductorLogDetails(Long conductorId) {
+    public List<ConductorLogTicketDTO> getConductorLogDetails(String conductorId) {
         try {
             // Fetch all tickets for the given conductor
             List<Tickets> tickets = ticketRepo.findByConductorId(conductorId);
@@ -152,7 +152,7 @@ public class PaymentServiceIMPL implements PaymentService {
     }
 
     @Override
-    public List<ConductorLogTicketDTO> getTicketDetailsByBusId(Long busId) {
+    public List<ConductorLogTicketDTO> getTicketDetailsByBusId(String busId) {
         try {
             // Fetch all tickets for the given bus ID
             List<Tickets> tickets = ticketRepo.findByBusId(busId);

@@ -8,7 +8,7 @@ import java.util.List;
 public interface PaymentService {
     String issueTicket(PaymentRequestDTO requestDTO);
 
-    List<ConductorLogTicketDTO> getConductorLogDetails(Long conductorId);
+    List<ConductorLogTicketDTO> getConductorLogDetails(String conductorId);
 
-    List<ConductorLogTicketDTO> getTicketDetailsByBusId(Long busId);
+    List<ConductorLogTicketDTO> getTicketDetailsByBusId(String busId);
 }
