@@ -48,20 +48,85 @@ jobs:
             mkdir -p $PROJECT_DIR
             cd $PROJECT_DIR
 
-            echo "Stopping old container on port 8083..."
-            docker ps -q --filter "publish=8083" | xargs -r docker stop || true
-            docker rm -f $APP_NAME || true
+            echo "=== Cleaning up old deployment ==="
+            
+            # Stop container gracefully with timeout
+            if docker ps -q --filter "name=$APP_NAME" | grep -q .; then
+              echo "Stopping existing container..."
+              docker stop $APP_NAME --time=10 || true
+              sleep 2
+            fi
 
+            # Remove old container
+            if docker ps -aq --filter "name=$APP_NAME" | grep -q .; then
+              echo "Removing old container..."
+              docker rm -f $APP_NAME || true
+            fi
+
+            # Remove old images to prevent conflicts
+            if docker images -q $APP_NAME | grep -q .; then
+              echo "Removing old images..."
+              docker rmi -f $APP_NAME || true
+            fi
+
+            # Clean up any containers using port 8083
+            docker ps -q --filter "publish=8083" | xargs -r docker stop --time=10 || true
+            docker ps -aq --filter "publish=8083" | xargs -r docker rm -f || true
+
+            echo "=== Building new deployment ==="
+
+            # Create optimized Dockerfile
             cat <<'EOF' > Dockerfile
-            FROM openjdk:17-jdk
+            FROM openjdk:17-jdk-slim
             WORKDIR /app
             COPY app.jar app.jar
             EXPOSE 8083
+            
+            # Add health check
+            HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+              CMD curl -f http://localhost:8083/actuator/health || exit 1
+            
             ENTRYPOINT ["java", "-jar", "app.jar"]
             EOF
 
-            echo "Rebuilding Docker image..."
+            echo "Building Docker image..."
             docker build --no-cache -t $APP_NAME .
 
-            echo "Running new container..."
-            docker run -d --name $APP_NAME -p 8083:8083 $APP_NAME
+            echo "Starting new container..."
+            docker run -d \
+              --name $APP_NAME \
+              -p 8083:8083 \
+              --restart=unless-stopped \
+              $APP_NAME
+
+            echo "=== Verifying deployment ==="
+            
+            # Wait for container to start
+            sleep 10
+            
+            # Check if container is running
+            if ! docker ps --filter "name=$APP_NAME" --filter "status=running" | grep -q $APP_NAME; then
+              echo "ERROR: Container failed to start"
+              docker logs $APP_NAME --tail=50
+              exit 1
+            fi
+
+            # Wait for application to be ready (max 2 minutes)
+            echo "Waiting for application to be ready..."
+            for i in {1..24}; do
+              if curl -f http://localhost:8083/actuator/health > /dev/null 2>&1; then
+                echo "✅ Application is ready!"
+                break
+              fi
+              echo "Waiting... ($i/24)"
+              sleep 5
+              if [ $i -eq 24 ]; then
+                echo "❌ Application failed to start within 2 minutes"
+                docker logs $APP_NAME --tail=50
+                exit 1
+              fi
+            done
+
+            echo "=== Deployment completed successfully ==="
+            echo "🚀 Application is running at http://$(curl -s http://checkip.amazonaws.com):8083"
+            echo "📚 Swagger UI: http://$(curl -s http://checkip.amazonaws.com):8083/swagger-ui.html"
