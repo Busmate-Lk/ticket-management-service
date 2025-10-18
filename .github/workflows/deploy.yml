@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # Change if you deploy from another branch
+      - main  # Change this if you deploy from another branch
 
 jobs:
   deploy:
@@ -25,32 +25,40 @@ jobs:
       - name: Build JAR
         run: mvn clean package -DskipTests
 
-      # 4. Copy JAR to EC2
+      # 4. Rename JAR file to a consistent name
+      - name: Rename JAR
+        run: mv target/*.jar target/app.jar
+
+      # 5. Copy JAR to EC2 instance
       - name: Copy JAR to EC2
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "target/*.jar"
-          target: "/home/ubuntu/${{ github.event.repository.name }}/app.jar"
+          source: "target/app.jar"
+          target: "/home/ubuntu/${{ github.event.repository.name }}/"
 
-      # 5. Deploy Docker container
+      # 6. SSH into EC2 and deploy with Docker
       - name: Deploy Docker container
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Ensure project directory exists
-            mkdir -p ${{ github.event.repository.name }}
-            cd ${{ github.event.repository.name }}
+            set -e  # stop on error
 
-            # Install Docker if missing
-            if ! command -v docker &> /dev/null
-            then
-              echo "Docker not found, installing..."
+            PROJECT_DIR="/home/ubuntu/${{ github.event.repository.name }}"
+            APP_NAME="${{ github.event.repository.name }}"
+
+            # Ensure project directory exists
+            mkdir -p $PROJECT_DIR
+            cd $PROJECT_DIR
+
+            # Install Docker if not installed
+            if ! command -v docker &> /dev/null; then
+              echo "Installing Docker..."
               sudo apt update -y
               sudo apt install -y docker.io
               sudo systemctl start docker
@@ -58,20 +66,20 @@ jobs:
               sudo usermod -aG docker $USER
             fi
 
-            # Create Dockerfile
-            cat <<EOF > Dockerfile
+            # Create Dockerfile dynamically
+            cat <<'EOF' > Dockerfile
             FROM openjdk:17-jdk
             WORKDIR /app
             COPY app.jar app.jar
-            ENTRYPOINT ["java", "-jar", "app.jar"]
             EXPOSE 8083
+            ENTRYPOINT ["java", "-jar", "app.jar"]
             EOF
 
             # Build Docker image
-            docker build -t ${{ github.event.repository.name }} .
+            docker build -t $APP_NAME .
 
             # Remove existing container if running
-            docker rm -f ${{ github.event.repository.name }} || true
+            docker rm -f $APP_NAME || true
 
             # Run new container on port 8083
-            docker run -d --name ${{ github.event.repository.name }} -p 8083:8083 ${{ github.event.repository.name }}
+            docker run -d --name $APP_NAME -p 8083:8083 $APP_NAME
