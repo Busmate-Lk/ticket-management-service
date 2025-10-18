@@ -19,16 +19,16 @@ public class Tickets {
     private Long ticketId;
 
     @Column(name = "bus_id", nullable = false)
-    private Long busId;
+    private String busId;
 
     @Column(name = "trip_id", nullable = false)
-    private Long tripId;
+    private String tripId;
 
     @Column(name = "conductor_id")
-    private Long conductorId;
+    private String conductorId;
 
     @Column(name = "passenger_id")
-    private Long passengerId;
+    private String passengerId;
 
     @Column(name = "seat_number", length = 10)
     private String seatNumber;

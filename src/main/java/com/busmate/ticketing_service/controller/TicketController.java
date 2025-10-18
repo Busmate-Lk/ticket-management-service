@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tickets")
-@CrossOrigin
+@CrossOrigin("*")
 public class TicketController {
 
     @Autowired
@@ -22,10 +22,13 @@ public class TicketController {
     }
 
     @GetMapping("/conductor/{conductorId}/logs")
-    public List<ConductorLogTicketDTO> getConductorLogs(@PathVariable Long conductorId) {
+    public List<ConductorLogTicketDTO> getConductorLogs(@PathVariable String conductorId) {
         return conductorLogService.getConductorLogDetails(conductorId);
     }
 
-
+    @GetMapping("/bus/{busId}")
+    public List<ConductorLogTicketDTO> getTicketsByBusId(@PathVariable String busId) {
+        return conductorLogService.getTicketDetailsByBusId(busId);
+    }
 
 }
